@@ -108,3 +108,72 @@ def plot_pressure_by_socioeconomic_level(
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     plt.savefig(save_path)
     plt.close()
+
+
+def plot_weight_vs_height(df, save_path="plots/peso_vs_estatura.png"):
+    """
+    Plot the relationship between weight and height.
+    Optional: colored by gender if column exists.
+    """
+    if "peso" not in df.columns or "altura" not in df.columns:
+        raise ValueError("Las columnas 'peso' y 'altura' son necesarias.")
+
+    filtered_df = df[["peso", "altura"]].copy()
+    if "género" in df.columns:
+        filtered_df["género"] = df["género"]
+
+    filtered_df = filtered_df.dropna()
+
+    plt.figure(figsize=(8, 6))
+    if "género" in filtered_df.columns:
+        sns.scatterplot(
+            data=filtered_df, x="altura", y="peso", hue="género", palette="Set2"
+        )
+    else:
+        sns.scatterplot(data=filtered_df, x="altura", y="peso", color="steelblue")
+
+    plt.title("Relación entre Peso y Estatura")
+    plt.xlabel("Estatura (cm)")
+    plt.ylabel("Peso (kg)")
+    plt.tight_layout()
+
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    plt.savefig(save_path)
+    plt.close()
+
+
+def plot_weight_age_by_gender_and_condition(
+    df, save_path="plots/peso_edad_genero_enfermedades.png"
+):
+    """
+    Plot weight vs age, colored by gender, separated by chronic condition status.
+    """
+    required_cols = ["edad", "peso", "género", "enfermedades_crónicas"]
+    for col in required_cols:
+        if col not in df.columns:
+            raise ValueError(f"La columna '{col}' es requerida para este gráfico.")
+
+    filtered_df = df[required_cols].dropna()
+
+    # Categorizar enfermedades
+    filtered_df["condición"] = filtered_df["enfermedades_crónicas"].apply(
+        lambda x: (
+            "Ninguna"
+            if str(x).strip().lower() == "ninguna"
+            else "Con enfermedad crónica"
+        )
+    )
+
+    # Crear el grid
+    g = sns.FacetGrid(
+        filtered_df, col="condición", hue="género", palette="Set2", height=5, aspect=1.2
+    )
+    g.map_dataframe(sns.scatterplot, x="edad", y="peso")
+    g.set_axis_labels("Edad", "Peso (kg)")
+    g.add_legend()
+    g.fig.subplots_adjust(top=0.85)
+    g.fig.suptitle("Relación entre Peso, Edad, Género y Condición Crónica")
+
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    g.savefig(save_path)
+    plt.close()

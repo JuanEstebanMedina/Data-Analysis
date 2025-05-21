@@ -81,8 +81,32 @@ Explore the `notebooks/` folder for step-by-step data exploration and analysis.
 
 Run all tests with:
 ```sh
-pytest
+.\Scripts\coverage.bat 
 ```
+
+## 📊 Analysis and Insights
+
+The following visualizations were generated to explore the clinical dataset:
+
+### 1. **Weight vs Age by Gender**
+
+The scatterplot revealed a positive trend between age and weight. Male patients tend to weigh more than female patients across all ages. However, the weight distribution appears relatively stable after age 40, and a number of outliers were observed at both extremes, suggesting potential data anomalies or exceptional health conditions.
+
+### 2. **BMI vs Chronic Conditions**
+
+The violin plot comparing BMI distributions shows that individuals with chronic diseases (e.g., hypertension, diabetes) tend to have higher BMIs on average. The distribution is notably shifted toward higher values for those with chronic conditions, suggesting a clear association between elevated BMI and chronic illness prevalence.
+
+### 3. **Systolic Blood Pressure vs Socioeconomic Level**
+
+Boxplots showed consistent systolic pressure distributions across the "Low", "Medium", and "High" socioeconomic groups. Medians were close to 120 mmHg in all categories, with no substantial differences in spread, indicating that socioeconomic level may not strongly influence systolic blood pressure in this dataset.
+
+### 4. **Weight vs Height**
+
+This scatterplot confirmed the expected linear correlation between height and weight. Male patients generally appear taller and heavier than female patients. The clustering patterns reflect standard physiological differences and suggest that both variables are good mutual predictors.
+
+### 5. **Weight vs Age by Gender and Chronic Condition**
+
+Using a faceted plot, we analyzed weight and age jointly by gender and the presence of chronic conditions. The panels show that patients with chronic conditions tend to have slightly higher weight values at similar ages, particularly among males. This supports the notion that chronic illnesses may co-occur with higher body mass, especially in aging populations.
 
 ## Contributing
 

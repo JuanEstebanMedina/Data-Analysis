@@ -5,6 +5,8 @@ from src.visualizer import (
     plot_imc_by_chronic_condition,
     plot_weight_age_by_gender,
     plot_pressure_by_socioeconomic_level,
+    plot_weight_age_by_gender_and_condition,
+    plot_weight_vs_height,
 )
 
 
@@ -111,3 +113,76 @@ def test_extract_systolic_handles_invalid_input():
 
     assert os.path.exists(file_path)
     os.remove(file_path)
+
+
+def test_plot_weight_vs_height_creates_file():
+    data = {
+        "peso": [60, 70, 80, 90],
+        "altura": [160, 170, 175, 180],
+        "género": ["F", "M", "F", "M"],
+    }
+    df = pd.DataFrame(data)
+    file_path = "tests/test_plots/test_peso_vs_estatura.png"
+
+    plot_weight_vs_height(df, save_path=file_path)
+
+    assert os.path.exists(file_path)
+    os.remove(file_path)
+
+
+def test_plot_weight_vs_height_without_gender():
+    data = {
+        "peso": [60, 70, 80, 90],
+        "altura": [160, 170, 175, 180],
+        # 'género' missing
+    }
+    df = pd.DataFrame(data)
+    file_path = "tests/test_plots/test_peso_vs_estatura.png"
+
+    plot_weight_vs_height(df, save_path=file_path)
+
+    assert os.path.exists(file_path)
+    os.remove(file_path)
+
+
+def test_plot_weight_vs_height_without_a_column():
+    data = {
+        "peso": [60, 70, 80, 90],
+        # 'altura' missing
+        "género": ["F", "M", "F", "M"],
+    }
+    df = pd.DataFrame(data)
+    file_path = "tests/test_plots/test_peso_vs_estatura.png"
+
+    with pytest.raises(ValueError):
+        plot_weight_vs_height(df, save_path=file_path)
+
+
+def test_plot_weight_age_by_gender_and_condition_creates_file():
+    data = {
+        "edad": [25, 30, 40, 50],
+        "peso": [60, 70, 80, 90],
+        "género": ["F", "M", "F", "M"],
+        "enfermedades_crónicas": ["Ninguna", "Hipertensión", "Ninguna", "Diabetes"],
+    }
+    df = pd.DataFrame(data)
+    file_path = "tests/test_plots/test_peso_edad_genero_enfermedades.png"
+
+    plot_weight_age_by_gender_and_condition(df, save_path=file_path)
+
+    assert os.path.exists(file_path)
+    os.remove(file_path)
+
+
+def test_plot_weight_age_by_gender_and_condition_without_a_column():
+    data = {
+        "edad": [25, 30, 40, 50],
+        "peso": [60, 70, 80, 90],
+        # "genero" missing
+        "enfermedades_crónicas": ["Ninguna", "Hipertensión", "Ninguna", "Diabetes"],
+    }
+    df = pd.DataFrame(data)
+    file_path = "tests/test_plots/test_peso_edad_genero_enfermedades.png"
+
+    with pytest.raises(ValueError):
+        plot_weight_age_by_gender_and_condition(df, save_path=file_path)
